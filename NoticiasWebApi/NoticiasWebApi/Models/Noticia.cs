@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace NoticiasWebApi.Models
 {
@@ -14,6 +16,22 @@ namespace NoticiasWebApi.Models
         public DateTime Fecha { get; set; }
         public int AutorID { get; set; }
         public Autor Autor { get; set; }
+
+        public class Map
+        {
+            public Map(EntityTypeBuilder<Noticia> ebNoticia )
+            {
+                ebNoticia.HasKey(x => x.NoticiaID);
+                ebNoticia.Property(x=>x.Titulo).HasColumnName("Titulo").HasMaxLength(50);
+                ebNoticia.Property(x => x.Descripcion).HasColumnName("Descripcion").HasMaxLength(100);
+                ebNoticia.Property(x => x.Contenido).HasColumnName("Contenido").HasMaxLength(int.MaxValue);
+                ebNoticia.Property(x => x.Fecha).HasColumnName("Fecha").HasColumnType("Datetime");
+                ebNoticia.Property(x => x.AutorID).HasColumnName("AutorID").HasColumnType("int");
+                ebNoticia.HasOne(x => x.Autor).WithMany(x=>x.Noticias).HasForeignKey(x=>x.Autor);
+
+            }
+
+        }
 
     }
 }
